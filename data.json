@@ -1,0 +1,22 @@
+{
+    "sender": {
+        "Name": "吳薯條", 
+        "Phone": "0933545545", 
+        "Email": "wow12399@gmail.com"
+    },
+    "receiver" : [
+        {
+            "Name": "吳薯條", 
+            "Phone": "0933545545", 
+            "Email": "wow12399@gmail.com"
+        },{
+            "Name": "薩諾斯", 
+            "Phone": "0933545545", 
+            "Email": "wow12399@gmail.com"
+        },{
+            "Name": "月光騎士", 
+            "Phone": "0933545545", 
+            "Email": "wow12399@gmail.com"
+        }
+    ]
+}

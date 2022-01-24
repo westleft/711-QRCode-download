@@ -2,8 +2,11 @@
 
 ![](https://img.shields.io/badge/Python-exercise-%23336d9b)
 
+![](https://i.imgur.com/PCa7K33.png)
+
+
 每次使用 711 店到店都要輸入寄件人資料 / 收件人資料 / 選門市...等資訊，太麻煩了。所以利用 `selenium` 幫忙填入資料，並將最終產生的 QR Code 下載下來。
-為了避免檔名混淆也增加了當日時間 (年月日時分秒)。
+為了避免檔名混淆也增加了收件者姓名 & 當日時間 (年月日時分秒)。
 
 這次遇到的問題有：
 
@@ -14,17 +17,19 @@
 使用 `enumerate` 搭配 `for` 可以產生像 JS 中的 `foreach` 用法
 
 ```python
-for index, itme in enumerate(sender.items()):
+for index, itme in enumerate(sender):
 ```
 
-如果 `dictionary` 則加個 `()` 即可
+如果是 `dictionary` 則加個 `()` 以及 `.items()` 即可
 ```python
-index,(key, value) in enumerate(sender.items()):
+for index,(key, value) in enumerate(sender.items()):
 ```
 
 ## 預計修正項目
-* 使用 GUI 
+* ~~使用 GUI~~(已完成)
 * 寄件及收件人資訊獨立檔案，並增加修改功能
+* 目前使用 `json` 儲存資料，改用資料庫
+* 打包成 exe
 
 過程中有使用 `try` 的用法，等待元素出現再執行
 ```python

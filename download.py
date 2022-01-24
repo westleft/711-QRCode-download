@@ -1,30 +1,25 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys  # 使用按鍵
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import requests
+import json
 
-chromedriver = Service("chromedriver.exe")
-options = webdriver.ChromeOptions()
-options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
-sender = {
-    'Name': '吳薯條', 
-    'Phone': '0933545545', 
-    'Email': 'wow12399@gmail.com'}
-receiver = {
-    'Name': '吳薯條', 
-    'Phone': '0933545545', 
-    'Email': 'wow12399@gmail.com'}
+file = open('data.json', 'r', encoding="utf-8")
+data = json.loads(file.read())
 
 class Crawler():
     def __init__(self):
+        pass
+
+    def goToWebsite(self):
+        chromedriver = Service("chromedriver.exe")
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(service = chromedriver, options=options)
         self.driver.maximize_window()
-    def goToWebsite(self):
         self.driver.get('https://myship2.7-11.com.tw/C2C/Page02')
 
     def page02(self):  
@@ -34,13 +29,13 @@ class Crawler():
         self.driver.find_element_by_xpath('//*[@id="nextStep"]').click()
 
     def page03(self):
-        for index,(key, value) in enumerate(sender.items()):
+        for index,(key, value) in enumerate(data['sender'].items()):
             self.driver.find_element_by_xpath(f'//*[@id="sender{key}"]').send_keys(value)
 
         self.driver.find_element_by_xpath('//*[@id="nextStep"]').click()
 
     def page04(self):
-        for index,(key, value) in enumerate(receiver.items()):
+        for index,(key, value) in enumerate(self.receiver.items()):
             self.driver.find_element_by_xpath(f'//*[@id="receiver{key}"]').send_keys(value)
 
         self.driver.find_element_by_xpath('//*[@id="checkStore"]').click()   
@@ -96,10 +91,15 @@ class Crawler():
         urlNumber = self.driver.find_element_by_id('pinno').text
 
         res = requests.get(f'https://epayment.7-11.com.tw/C2C/C2CWeb/QRCode.ashx?CodeValue={urlNumber}')
-        with open(f'QRcode-{time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())}.png' ,'wb') as f:
+        with open(f'QRcode-{self.receiver["Name"]}{time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())}.png' ,'wb') as f:
             f.write(res.content)
 
-    def run(self):
+    def getReceiver(self, index):
+        self.receiver = data['receiver'][index]
+        # print(self.receiver)
+
+    def run(self, index):
+        self.getReceiver(index)
         self.goToWebsite()
         self.page02()
         self.page03()
@@ -109,4 +109,4 @@ class Crawler():
         self.downloadQRcode()
 
 crawler = Crawler()
-crawler.run()
+# crawler.run(2)
