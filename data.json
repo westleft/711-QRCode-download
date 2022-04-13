@@ -1,22 +1,20 @@
 {
     "sender": {
-        "Name": "吳薯條", 
-        "Phone": "0933545545", 
+        "Name": "吳淑蕙", 
+        "Phone": "0921832272", 
         "Email": "wow12399@gmail.com"
     },
     "receiver" : [
         {
-            "Name": "吳薯條", 
+            "Name": "廖如慧", 
             "Phone": "0933545545", 
-            "Email": "wow12399@gmail.com"
+            "Email": "wow12399@gmail.com",
+            "ShopNumber": "174109"
         },{
-            "Name": "薩諾斯", 
-            "Phone": "0933545545", 
-            "Email": "wow12399@gmail.com"
-        },{
-            "Name": "月光騎士", 
-            "Phone": "0933545545", 
-            "Email": "wow12399@gmail.com"
+            "Name": "戴綺萱", 
+            "Phone": "0933013828", 
+            "Email": "dfgfdg0933@gmail.com",
+            "ShopNumber": "161402"
         }
     ]
 }
