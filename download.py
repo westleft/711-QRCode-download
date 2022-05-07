@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import requests
 import json
@@ -18,7 +19,8 @@ class Crawler():
         chromedriver = Service("chromedriver.exe")
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.driver = webdriver.Chrome(service = chromedriver, options=options)
+        
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.driver.maximize_window()
         self.driver.get('https://myship2.7-11.com.tw/C2C/Page02')
 
@@ -36,8 +38,11 @@ class Crawler():
 
     def page04(self):
         for index,(key, value) in enumerate(self.receiver.items()):
+            if(key == "ShopNumber"):
+                break
             self.driver.find_element_by_xpath(f'//*[@id="receiver{key}"]').send_keys(value)
-
+            print(key, value)
+            
         self.driver.find_element_by_xpath('//*[@id="checkStore"]').click()   
         
     def selectStore(self):
@@ -47,7 +52,7 @@ class Crawler():
 
         self.driver.switch_to.frame('frmMain')
 
-        self.driver.find_element_by_xpath('//*[@id="storeIDKey"]').send_keys('174109')
+        self.driver.find_element_by_xpath('//*[@id="storeIDKey"]').send_keys(self.receiver["ShopNumber"])
         self.driver.find_element_by_xpath('//*[@id="send"]').click()
 
         try:
@@ -96,7 +101,8 @@ class Crawler():
 
     def getReceiver(self, index):
         self.receiver = data['receiver'][index]
-        # print(self.receiver)
+        print(self.receiver)
+        print(index)
 
     def run(self, index):
         self.getReceiver(index)

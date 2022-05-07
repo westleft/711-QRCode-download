@@ -1,7 +1,7 @@
 import tkinter as tk
 import json
 from download import crawler
-
+from functools import partial
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -34,7 +34,8 @@ class Gui():
                             width = '20',
                             text = item['Name'], 
                             font = ('微軟正黑體', 12),
-                            command = lambda: crawler.run(index))
+                            command = partial(crawler.run, index))
+                            # command=partial(change_label_number, 2)
             btn.grid(column = 0, row = index + 1)
 
     def run(self):
