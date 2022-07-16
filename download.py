@@ -48,6 +48,8 @@ class Crawler():
     def selectStore(self):
         window_after = self.driver.window_handles[1]
         self.driver.switch_to.window(window_after)
+
+        time.sleep(0.5)
         self.driver.find_element_by_xpath('//*[@id="byID"]').click()
 
         self.driver.switch_to.frame('frmMain')
