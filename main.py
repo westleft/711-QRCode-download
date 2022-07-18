@@ -9,13 +9,9 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 import tkinter as tk
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("./assets")
+from numpy import place
 
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
+from reader import jsonReader
 
 class Application:
 
@@ -92,29 +88,29 @@ class Application:
             font=("Poppins Medium", 12 * -1)
         )
 
-        self.canvas.create_text(
+        self.receiverName = self.canvas.create_text(
             652.0,
             316.0,
             anchor="nw",
-            text="薯條無",
+            text="尚未選擇",
             fill="#FFFFFF",
             font=("Poppins Medium", 12 * -1)
         )
 
-        self.canvas.create_text(
+        self.receiverPhone = self.canvas.create_text(
             652.0,
             345.0,
             anchor="nw",
-            text="091121212",
+            text="尚未選擇",
             fill="#FFFFFF",
             font=("Poppins Medium", 12 * -1)
         )
 
-        self.canvas.create_text(
+        self.receiverShopNumber = self.canvas.create_text(
             652.0,
             375.0,
             anchor="nw",
-            text="民富門市",
+            text="尚未選擇",
             fill="#FFFFFF",
             font=("Poppins Medium", 12 * -1)
         )
@@ -145,10 +141,17 @@ class Application:
             self.canvas, text="下載 QRCODE",
             background="#552D96", fg="#fff",
             borderwidth=0, font=('微軟正黑體', 12),
+            command = lambda: self.gg()
         ).place(
             x = 671.0, y = 434.0,
             width = 157.0, height = 49.0
         )
+    
+    def gg(self):
+        global qrcode
+        qrcode = PhotoImage(file=r"assets/qqq.png")
+
+        self.canvas.itemconfig(self.qrcode,image=qrcode)
 
     # 建立圖片
     def createImage(self):
@@ -159,8 +162,8 @@ class Application:
             image=logo
         )
 
-        qrcode = PhotoImage(file=relative_to_assets("image_2.png"))
-        self.canvas.create_image(
+        qrcode = PhotoImage(file=r"assets/image_2.png")
+        self.qrcode = self.canvas.create_image(
             658.0,
             168.0,
             image=qrcode
@@ -168,9 +171,12 @@ class Application:
 
     # 建立下拉選單
     def createOptionmenu(self):
-        optionList = ['apple', 'banana', 'orange', 'lemon', 'tomato']
+        # 取得下拉選單 收件人姓名
+        jsonReader.readJson("data.json")
+        optionList = jsonReader.getReceiverName()
+
         var = tk.StringVar()
-        var.set(optionList[0])
+        var.set("請選擇收件人")
         myoptionmenu = tk.OptionMenu(self.window, var, *optionList)
         myoptionmenu.config(bg="#552D96", fg="WHITE")
         myoptionmenu["highlightthickness"] = 0
@@ -185,16 +191,18 @@ class Application:
 
     # 下拉選單事件
     def getOpitionValue(self, value):
-        print(value)
+        receiver = jsonReader.filterData(value)
+        self.canvas.itemconfig(self.receiverName, text = receiver['Name'])
+        self.canvas.itemconfig(self.receiverPhone, text = receiver['Phone'])
+        self.canvas.itemconfig(self.receiverShopNumber, text = receiver['ShopNumber'])
 
     # 建立矩形
-
     def createRectangle(self):
         self.canvas.create_rectangle(
             48.0,  77.0,
             515.0, 81.0,
-            fill="#9D73E3",
-            outline=""
+            fill = "#9D73E3",
+            outline = ""
         )
 
     # 持續執行 GUI 介面
