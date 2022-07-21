@@ -4,17 +4,18 @@
 
 from pathlib import Path
 
-# from tkinter import *
-# Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter.filedialog import askdirectory
 import tkinter as tk
 
 from numpy import place
+import requests
+import time
 
-from reader import jsonReader
+from tools.reader import jsonReader
+from tools.crawler import Crawler
 
 class Application:
-
     def __init__(self):
         self.createTk()
         self.createTexts()
@@ -121,7 +122,8 @@ class Application:
         Button(
             self.canvas, text="產生 QR CODE √",
             background="#552D96", fg="#fff",
-            borderwidth=0, font=('微軟正黑體', 12)
+            borderwidth=0, font=('微軟正黑體', 12),
+            command = lambda: self.openCrawler()
         ).place(
             x = 48.0, y = 435.0,
             width = 461.0, height = 49.0
@@ -141,17 +143,32 @@ class Application:
             self.canvas, text="下載 QRCODE",
             background="#552D96", fg="#fff",
             borderwidth=0, font=('微軟正黑體', 12),
-            command = lambda: self.gg()
+            command = lambda: self.downloadQrcode()
         ).place(
             x = 671.0, y = 434.0,
             width = 157.0, height = 49.0
         )
     
-    def gg(self):
+    def openCrawler(self):
+        # 換圖片
         global qrcode
         qrcode = PhotoImage(file=r"assets/qqq.png")
-
         self.canvas.itemconfig(self.qrcode,image=qrcode)
+
+        # =======
+        print(self.receiver)
+        crawler = Crawler(self.receiver)
+        self.url = crawler.run()
+        qrcode = PhotoImage(file=self.url)
+        self.canvas.itemconfig(self.qrcode,image=qrcode)
+    
+    def downloadQrcode(self):
+        path = askdirectory()
+        # 取得下載路徑
+        filename = path + f'/QRcode-{self.receiver["Name"]}{time.strftime("%Y-%m-%d", time.localtime())}.png'
+        res = requests.get(self.url)
+        with open(filename ,'wb') as f:
+            f.write(res.content)
 
     # 建立圖片
     def createImage(self):
@@ -172,7 +189,7 @@ class Application:
     # 建立下拉選單
     def createOptionmenu(self):
         # 取得下拉選單 收件人姓名
-        jsonReader.readJson("data.json")
+        jsonReader.readJson("./data/data.json")
         optionList = jsonReader.getReceiverName()
 
         var = tk.StringVar()
@@ -191,10 +208,10 @@ class Application:
 
     # 下拉選單事件
     def getOpitionValue(self, value):
-        receiver = jsonReader.filterData(value)
-        self.canvas.itemconfig(self.receiverName, text = receiver['Name'])
-        self.canvas.itemconfig(self.receiverPhone, text = receiver['Phone'])
-        self.canvas.itemconfig(self.receiverShopNumber, text = receiver['ShopNumber'])
+        self.receiver = jsonReader.filterData(value)
+        self.canvas.itemconfig(self.receiverName, text = self.receiver['Name'])
+        self.canvas.itemconfig(self.receiverPhone, text = self.receiver['Phone'])
+        self.canvas.itemconfig(self.receiverShopNumber, text = self.receiver['ShopNumber'])
 
     # 建立矩形
     def createRectangle(self):
