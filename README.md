@@ -1,4 +1,4 @@
-# 711 寄件小幫手
+# 711 QR Code 小幫手
 
 <img src="https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white&logoWidth=24" alt=""/> 
 
@@ -6,7 +6,8 @@
 
 ## 簡介
 
-這是一個使用 Python 製作的小幫手，主要用來解決 711 店到店的繁瑣步驟，透過圖形化介面能夠輕鬆產生 QR Code，不須手動輸入。
+這是一個使用 Python 製作的小幫手，用來解決 711 店到店的繁瑣步驟。<br>
+透過圖形化介面能夠輕鬆產生 QR Code，不須手動輸入寄件人 & 收件人姓名、電話、門市編號等資訊。
 
 ## 主要功能
 
